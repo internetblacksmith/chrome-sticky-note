@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Sticky Notes",
+  "version": "1.0.0",
+  "description": "Add persistent sticky notes to any webpage. Notes are saved per URL and automatically cleaned up when tabs are closed.",
+  "author": "Paolo Fabbri",
+  "homepage_url": "https://github.com/internetblacksmith/chrome-sticky-note",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Add Sticky Note",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "minimum_chrome_version": "88"
+}

@@ -1,0 +1,23 @@
+# Chrome extension packaging
+*.pem
+*.crx
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node (if tooling is added later)
+node_modules/
+package-lock.json
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.*
