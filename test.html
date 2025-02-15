@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page for Sticky Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Test Page for Chrome Sticky Notes Extension</h1>
+        <p>This is a test page to verify the sticky notes extension functionality.</p>
+        <h2>Testing Instructions:</h2>
+        <ol>
+            <li>Click the extension icon in the Chrome toolbar, then click 'Add Sticky Note'</li>
+            <li>Type some text in the note</li>
+            <li>Click the pin icon (📍) to pin the note - it should change to 📌</li>
+            <li>Close this tab and reopen it - pinned notes should reappear</li>
+            <li>Open the same URL in a different tab - pinned notes should appear there too</li>
+            <li>Unpin a note by clicking the pin icon again (📌 → 📍)</li>
+            <li>Close the tab - unpinned notes should be deleted</li>
+        </ol>
+    </div>
+</body>
+</html>
