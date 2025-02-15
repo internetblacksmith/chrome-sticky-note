@@ -71,7 +71,9 @@ class TabCleanupManager {
   generateStorageKey(url) {
     try {
       const urlObj = new URL(url);
-      return `sticky_notes_${urlObj.hostname}_${urlObj.pathname}`;
+      const hostname = urlObj.hostname.replace(/[^a-zA-Z0-9.-]/g, '');
+      const pathname = urlObj.pathname.replace(/[^a-zA-Z0-9/.-]/g, '');
+      return `sticky_notes_${hostname}_${pathname}`;
     } catch (error) {
       return null;
     }
