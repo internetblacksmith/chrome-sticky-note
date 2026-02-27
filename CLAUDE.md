@@ -13,6 +13,6 @@ make build      # Package zip for Chrome Web Store
 ## Critical Rules
 
 - Vanilla JS only — no frameworks, no build step, no external dependencies
-- CSS isolation: all note styles must use `!important` to override host page CSS
+- DOM isolation: all note UI must live inside a closed Shadow DOM — never inject into the host page DOM directly
 - Keep docs updated with every code or feature change
 - Keep Makefile updated — add new tasks as project evolves
