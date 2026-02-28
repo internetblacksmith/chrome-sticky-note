@@ -1,5 +1,7 @@
 # Tab Sticky Notes
 
+[![GitHub Release](https://img.shields.io/github/v/release/internetblacksmith/chrome-sticky-note)](https://github.com/internetblacksmith/chrome-sticky-note/releases/latest)
+
 A Chrome extension for adding persistent sticky notes to any webpage. Notes are saved per URL and automatically cleaned up when tabs are closed.
 
 ## Features
