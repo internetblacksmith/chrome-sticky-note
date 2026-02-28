@@ -8,8 +8,9 @@ Tab Sticky Notes stores the following data locally on your device using Chrome's
 
 - **Note content** — the text you type in sticky notes
 - **Note position** — coordinates on the page
-- **Page URL** — hostname and pathname, used to associate notes with the correct page
+- **Page URL** — origin, pathname, and query string, used to associate notes with the correct page
 - **Pin state** — whether a note is pinned
+- **Onboarding state** — a single flag recording whether you have seen the first-note tip, so it is shown only once
 
 No data is collected, transmitted, or stored on external servers. The extension makes no network requests.
 

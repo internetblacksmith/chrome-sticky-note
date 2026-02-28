@@ -165,8 +165,11 @@ chrome.runtime.onStartup.addListener(() => {
   cleanupManager.cleanupOrphanedNotes();
 });
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
   cleanupManager.cleanupOrphanedNotes();
+  if (details.reason === 'install') {
+    chrome.storage.local.set({ onboarding_seen_first_note_tip: false });
+  }
 });
 
 setInterval(() => {

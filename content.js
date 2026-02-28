@@ -211,6 +211,64 @@ class StickyNoteManager {
           transition: none !important;
         }
       }
+
+      .onboarding-tip {
+        position: absolute !important;
+        top: -8px !important;
+        right: 30px !important;
+        transform: translateY(-100%) !important;
+        background: #333 !important;
+        color: #fff !important;
+        padding: 10px 14px !important;
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        font-family: Arial, sans-serif !important;
+        line-height: 1.5 !important;
+        width: 220px !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25) !important;
+        z-index: 1 !important;
+        opacity: 0 !important;
+        transition: opacity 0.25s ease !important;
+      }
+
+      .onboarding-tip.visible {
+        opacity: 1 !important;
+      }
+
+      .onboarding-tip::after {
+        content: '' !important;
+        display: block !important;
+        position: absolute !important;
+        bottom: -6px !important;
+        right: 14px !important;
+        width: 12px !important;
+        height: 12px !important;
+        background: #333 !important;
+        transform: rotate(45deg) !important;
+      }
+
+      .onboarding-tip-sub {
+        display: block !important;
+        font-size: 11px !important;
+        color: #aaa !important;
+        margin-top: 4px !important;
+      }
+
+      .onboarding-tip-dismiss {
+        display: inline-block !important;
+        margin-top: 8px !important;
+        padding: 4px 10px !important;
+        background: rgba(255,255,255,0.15) !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        border-radius: 4px !important;
+        color: #fff !important;
+        font-size: 12px !important;
+        cursor: pointer !important;
+      }
+
+      .onboarding-tip-dismiss:hover {
+        background: rgba(255,255,255,0.25) !important;
+      }
     `;
     return this._shadowStyles;
   }
@@ -261,6 +319,44 @@ class StickyNoteManager {
     }, 3000);
   }
 
+  _showFirstNoteTip(shadow, noteContainer) {
+    chrome.storage.local.get(['onboarding_seen_first_note_tip'], (result) => {
+      if (result.onboarding_seen_first_note_tip !== false) return;
+
+      const tip = document.createElement('div');
+      tip.className = 'onboarding-tip';
+
+      const mainText = document.createTextNode('Pin this note to keep it when the tab closes');
+
+      const sub = document.createElement('span');
+      sub.className = 'onboarding-tip-sub';
+      sub.textContent = 'Unpinned notes are deleted when you leave the page';
+
+      const dismiss = document.createElement('button');
+      dismiss.className = 'onboarding-tip-dismiss';
+      dismiss.textContent = 'Got it';
+
+      tip.appendChild(mainText);
+      tip.appendChild(sub);
+      tip.appendChild(dismiss);
+      noteContainer.appendChild(tip);
+
+      requestAnimationFrame(() => tip.classList.add('visible'));
+
+      const removeTip = () => {
+        clearTimeout(autoDismiss);
+        tip.classList.remove('visible');
+        setTimeout(() => tip.remove(), 250);
+        chrome.storage.local.set({ onboarding_seen_first_note_tip: true });
+      };
+
+      dismiss.addEventListener('click', removeTip);
+      const autoDismiss = setTimeout(() => {
+        if (tip.parentNode) removeTip();
+      }, 8000);
+    });
+  }
+
   createStickyNote(x = 100, y = 100, text = '', id = null, isPinned = false) {
     try {
       if (this.notes.size >= this.maxNotes) {
@@ -304,7 +400,7 @@ class StickyNoteManager {
       const pinButton = document.createElement('button');
       pinButton.className = 'sticky-note-pin';
       pinButton.textContent = isPinned ? '\u{1F4CC}' : '\u{1F4CD}';
-      pinButton.title = isPinned ? 'Unpin note' : 'Pin note';
+      pinButton.title = isPinned ? 'Unpin — deleted when tab closes' : 'Pin — stays when tab closes';
       pinButton.style.setProperty('opacity', isPinned ? '1' : '0.5', 'important');
 
       pinButton.addEventListener('click', () => {
@@ -313,7 +409,7 @@ class StickyNoteManager {
           const newPinStatus = !note.isPinned;
           note.isPinned = newPinStatus;
           pinButton.textContent = newPinStatus ? '\u{1F4CC}' : '\u{1F4CD}';
-          pinButton.title = newPinStatus ? 'Unpin note' : 'Pin note';
+          pinButton.title = newPinStatus ? 'Unpin — deleted when tab closes' : 'Pin — stays when tab closes';
           pinButton.style.setProperty('opacity', newPinStatus ? '1' : '0.5', 'important');
           this.saveNote(noteId, note.text, note.x, note.y, newPinStatus);
 
@@ -383,6 +479,10 @@ class StickyNoteManager {
       });
 
       this.saveNote(noteId, text, x, y, isPinned);
+
+      if (!id) {
+        this._showFirstNoteTip(shadow, noteContainer);
+      }
 
       return host;
     } catch (error) {
@@ -601,7 +701,7 @@ class StickyNoteManager {
       note.isPinned = noteData.isPinned;
       if (note.pinButton) {
         note.pinButton.textContent = noteData.isPinned ? '\u{1F4CC}' : '\u{1F4CD}';
-        note.pinButton.title = noteData.isPinned ? 'Unpin note' : 'Pin note';
+        note.pinButton.title = noteData.isPinned ? 'Unpin — deleted when tab closes' : 'Pin — stays when tab closes';
         note.pinButton.style.setProperty('opacity', noteData.isPinned ? '1' : '0.5', 'important');
       }
     }

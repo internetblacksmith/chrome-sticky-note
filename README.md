@@ -10,6 +10,8 @@ A Chrome extension for adding persistent sticky notes to any webpage. Notes are 
 - Cross-tab sync — edits, moves, and deletes appear in all tabs on the same URL
 - Drag-and-drop repositioning via note header
 - Pin notes to keep them across tab close/reopen
+- First-time onboarding tooltip and popup hint for new users
+- Help panel in the popup explaining pinning and drag behaviour
 - Auto-save while typing
 - CSS isolation from host page styles
 - Automatic cleanup of unpinned notes on tab close
@@ -26,7 +28,7 @@ A Chrome extension for adding persistent sticky notes to any webpage. Notes are 
 
 ## Usage
 
-Click the extension icon in the Chrome toolbar and select **Add Sticky Note**. A yellow note appears on the page — type to edit, drag the header to move, and click **x** to delete.
+Click the extension icon in the Chrome toolbar to open the popup, then click **Add Sticky Note**. A yellow note appears on the page — type to edit, drag the header to move, and click **x** to delete. Tap the **?** button in the popup for a quick reference on pinning and repositioning notes.
 
 ### Pin / Unpin
 
@@ -51,7 +53,7 @@ All data is stored locally. No data leaves your browser.
 ## Technical Details
 
 - **Manifest V3** with service worker background script
-- **Storage**: Chrome local storage, keyed by `hostname + pathname`, synced across tabs via `storage.onChanged`
+- **Storage**: Chrome local storage, keyed by `origin + pathname + query string`, synced across tabs via `storage.onChanged`
 - **Limits**: 50 notes per URL, 5 000 characters per note
 - **Minimum Chrome**: 88
 - **Dependencies**: None (vanilla JavaScript)
