@@ -49,7 +49,6 @@ build: clean ## Build zip for Chrome Web Store submission
 		background.js \
 		popup.html \
 		popup.js \
-		styles.css \
 		icon16.png \
 		icon48.png \
 		icon128.png \
@@ -65,7 +64,7 @@ version: ## Show current extension version
 
 files: ## List all extension files
 	@echo "Extension files:"
-	@ls -la *.js *.json *.html *.css *.png 2>/dev/null
+	@ls -la *.js *.json *.html *.png 2>/dev/null
 
 help: ## Show all commands with descriptions
 	@echo "Available commands:"

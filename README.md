@@ -5,6 +5,7 @@ A Chrome extension for adding persistent sticky notes to any webpage. Notes are 
 ## Features
 
 - Per-URL note persistence across page reloads
+- Cross-tab sync — edits, moves, and deletes appear in all tabs on the same URL
 - Drag-and-drop repositioning via note header
 - Pin notes to keep them across tab close/reopen
 - Auto-save while typing
@@ -45,7 +46,7 @@ All data is stored locally. No data leaves your browser.
 ## Technical Details
 
 - **Manifest V3** with service worker background script
-- **Storage**: Chrome local storage, keyed by `hostname + pathname`
+- **Storage**: Chrome local storage, keyed by `hostname + pathname`, synced across tabs via `storage.onChanged`
 - **Limits**: 50 notes per URL, 5 000 characters per note
 - **Minimum Chrome**: 88
 - **Dependencies**: None (vanilla JavaScript)
@@ -64,7 +65,6 @@ chrome-sticky-note/
 ├── content.js          # StickyNoteManager — note CRUD and persistence
 ├── background.js       # TabCleanupManager — tab lifecycle and orphan cleanup
 ├── popup.html/js       # Extension popup interface
-├── styles.css          # CSS reset and note styling (all !important)
 ├── test.html           # Manual test page
 ├── icon*.png / .svg    # Extension icons
 └── docs/               # Privacy policy and permission docs

@@ -1,79 +1,48 @@
 # Privacy Policy for Tab Sticky Notes
 
-**Last Updated:** November 9, 2024
+**Last Updated:** February 27, 2026
 
-## Overview
+## What Data We Store
 
-Tab Sticky Notes is a Chrome extension that allows users to create and manage sticky notes on web pages. This privacy policy explains how we collect, use, and protect your information.
+Tab Sticky Notes stores the following data locally on your device using Chrome's local storage API:
 
-## Information We Collect
+- **Note content** — the text you type in sticky notes
+- **Note position** — coordinates on the page
+- **Page URL** — hostname and pathname, used to associate notes with the correct page
+- **Pin state** — whether a note is pinned
 
-### Local Storage Only
-- **Sticky Note Content:** The text you type in sticky notes is stored locally on your device using Chrome's local storage API
-- **Note Positions:** The position and size of your notes are stored locally
-- **URL Information:** We use the current webpage URL (hostname and pathname) to associate notes with specific pages
+No data is collected, transmitted, or stored on external servers. The extension makes no network requests.
 
-### No Remote Data Collection
-- We do NOT collect, transmit, or store any personal information on external servers
-- We do NOT track your browsing behavior
-- We do NOT collect analytics or usage statistics
-- We do NOT access or store any personal data beyond what you explicitly put in the notes
+## How Data Is Used
 
-## How We Use Your Information
+Stored data is used to display your notes on the correct page and restore them between page reloads and browser sessions.
 
-Your information is used solely for:
-- Displaying sticky notes on the correct web pages
-- Persisting notes between browser sessions
-- Cleaning up notes when tabs are closed
+## Data Sharing
 
-## Data Storage and Security
-
-### Local Storage
-- All data is stored locally on your device using Chrome's secure storage API
-- Notes are associated with specific URLs and remain private to your browser
-- Data is automatically cleaned up when tabs are closed
-
-### No Third-Party Access
-- No third parties have access to your notes or data
-- We do not share any information with external services
-- No data is transmitted over the internet
-
-## Permissions Explained
-
-The extension requests the following permissions:
-- **activeTab:** To inject the sticky note interface into web pages
-- **storage:** To save and retrieve your notes locally
-- **scripting:** To add the note functionality to web pages
-- **tabs:** To clean up notes when tabs are closed
+None. No data leaves your device. No third parties have access to your data.
 
 ## Data Retention
 
-- Notes persist until you manually delete them or close the browser tab
-- Notes are automatically cleaned up when tabs are closed
-- You can manually delete individual notes at any time
-- Uninstalling the extension will remove all stored notes
-
-## Children's Privacy
-
-This extension does not knowingly collect any information from children under 13. If you are a parent or guardian and believe your child has provided information to this extension, please contact us.
-
-## Changes to This Policy
-
-We may update this privacy policy from time to time. Any changes will be reflected in the extension's listing on the Chrome Web Store.
-
-## Contact Information
-
-If you have questions about this privacy policy or the extension, please contact us at:
-- Email: jabawack81@gmail.com
-- GitHub: https://github.com/internetblacksmith
+- Unpinned notes are deleted when the tab is closed
+- Pinned notes persist until you delete them manually
+- Uninstalling the extension removes all stored data
 
 ## Your Rights
 
-You have the right to:
-- Delete any or all of your notes at any time
-- Uninstall the extension to remove all stored data
-- Contact us with any privacy concerns
+You can view, modify, or delete any note at any time by interacting with it directly on the page. Uninstalling the extension erases all stored data. There is no data on any server to request deletion of.
 
-## Data Controller
+For users in the EU/EEA: the legal basis for local storage is legitimate interest (providing the functionality you installed the extension for). Since all data is local to your device, you already have full control over access, correction, and deletion.
 
-This extension is developed and maintained by Paolo Fabbri. We are committed to protecting your privacy and ensuring your data remains secure and private.
+## Limited Use Disclosure
+
+Tab Sticky Notes' use of information received from Google APIs adheres to the [Chrome Web Store User Data Policy](https://developer.chrome.com/docs/webstore/program-policies/user-data-faq), including the Limited Use requirements.
+
+## Changes to This Policy
+
+Updates will be reflected in the extension's Chrome Web Store listing. The "Last Updated" date above will change.
+
+## Contact
+
+Paolo Fabbri
+- Email: jabawack81@gmail.com
+- GitHub: https://github.com/internetblacksmith
