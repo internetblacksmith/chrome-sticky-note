@@ -4,6 +4,7 @@ class StickyNoteManager {
     this.noteCounter = 0;
     this._saveTimers = new Map();
     this._syncingFromStorage = false;
+    this._writeQueue = Promise.resolve();
     this.tabId = this.generateTabId();
     if (!this.tabId) return;
     this.maxNotes = 50;
@@ -18,11 +19,29 @@ class StickyNoteManager {
         return null;
       }
       const urlObj = new URL(window.location.href);
-      return `sticky_notes_${urlObj.origin}${urlObj.pathname}`;
+      return `sticky_notes_${urlObj.origin}${urlObj.pathname}${urlObj.search}`;
     } catch (error) {
       console.warn('[TabStickyNotes] Failed to generate storage key:', error);
       return null;
     }
+  }
+
+  _normalizedUrl() {
+    const u = new URL(window.location.href);
+    return `${u.origin}${u.pathname}${u.search}`;
+  }
+
+  _enqueueWrite(key, mutateFn) {
+    this._writeQueue = this._writeQueue.then(() => new Promise((resolve) => {
+      chrome.storage.local.get([key], (result) => {
+        if (chrome.runtime.lastError) { resolve(); return; }
+        const data = result[key] ? Object.assign(Object.create(null), result[key]) : Object.create(null);
+        const updated = mutateFn(data);
+        if (updated === undefined) { resolve(); return; }
+        chrome.storage.local.set({ [key]: updated }, () => resolve());
+      });
+    }));
+    return this._writeQueue;
   }
 
   init() {
@@ -249,9 +268,11 @@ class StickyNoteManager {
         return null;
       }
 
+      const NOTE_ID_PATTERN = /^note_(\d+)$/;
+      if (id && !NOTE_ID_PATTERN.test(id)) id = null;
       const noteId = id || `note_${this.noteCounter++}`;
       if (id) {
-        const match = id.match(/^note_(\d+)$/);
+        const match = id.match(NOTE_ID_PATTERN);
         if (match) {
           this.noteCounter = Math.max(this.noteCounter, parseInt(match[1]) + 1);
         }
@@ -302,7 +323,7 @@ class StickyNoteManager {
               text: note.text,
               x: note.x,
               y: note.y,
-              url: window.location.href
+              url: this._normalizedUrl()
             });
           } else {
             this.removePinnedNoteGlobally(noteId);
@@ -332,8 +353,8 @@ class StickyNoteManager {
         this._debouncedSave(
           noteId,
           textarea.value,
-          parseInt(host.style.left),
-          parseInt(host.style.top),
+          parseInt(host.style.left) || 0,
+          parseInt(host.style.top) || 0,
           note ? note.isPinned : false
         );
       });
@@ -408,8 +429,8 @@ class StickyNoteManager {
         isDragging = false;
         const note = this.notes.get(noteId);
         if (note) {
-          const finalLeft = parseInt(hostElement.style.left);
-          const finalTop = parseInt(hostElement.style.top);
+          const finalLeft = parseInt(hostElement.style.left) || 0;
+          const finalTop = parseInt(hostElement.style.top) || 0;
           note.x = finalLeft;
           note.y = finalTop;
           this.saveNote(noteId, note.textarea.value, finalLeft, finalTop, note.isPinned);
@@ -449,17 +470,13 @@ class StickyNoteManager {
       y: Math.max(0, Math.min(parseInt(y) || 0, window.innerHeight - 150)),
       timestamp: now,
       isPinned: isPinned !== undefined ? isPinned : currentPinStatus,
-      url: window.location.href
+      url: this._normalizedUrl()
     };
 
     if (chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get([this.tabId], (result) => {
-        if (chrome.runtime.lastError) {
-          return;
-        }
-        const notes = result[this.tabId] || {};
+      this._enqueueWrite(this.tabId, (notes) => {
         notes[noteId] = noteData;
-        chrome.storage.local.set({ [this.tabId]: notes });
+        return notes;
       });
     }
   }
@@ -474,7 +491,7 @@ class StickyNoteManager {
         return;
       }
 
-      const notes = result[this.tabId] || {};
+      const notes = result[this.tabId] ? Object.assign(Object.create(null), result[this.tabId]) : Object.create(null);
       const notesList = Object.values(notes).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
 
       notesList.forEach(note => {
@@ -499,33 +516,30 @@ class StickyNoteManager {
 
     if (this._syncingFromStorage) return;
 
-    chrome.storage.local.get([this.tabId], (result) => {
-      const notes = result[this.tabId] || {};
+    this._enqueueWrite(this.tabId, (notes) => {
       delete notes[noteId];
-      chrome.storage.local.set({ [this.tabId]: notes });
+      return notes;
     });
   }
 
   savePinnedNoteGlobally(noteData) {
-    chrome.storage.local.get(['pinnedNotes'], (result) => {
-      const pinnedNotes = result.pinnedNotes || {};
+    this._enqueueWrite('pinnedNotes', (pinnedNotes) => {
       pinnedNotes[noteData.id] = noteData;
-      chrome.storage.local.set({ pinnedNotes: pinnedNotes });
+      return pinnedNotes;
     });
   }
 
   removePinnedNoteGlobally(noteId) {
-    chrome.storage.local.get(['pinnedNotes'], (result) => {
-      const pinnedNotes = result.pinnedNotes || {};
+    this._enqueueWrite('pinnedNotes', (pinnedNotes) => {
       delete pinnedNotes[noteId];
-      chrome.storage.local.set({ pinnedNotes: pinnedNotes });
+      return pinnedNotes;
     });
   }
 
   loadPinnedNotes() {
     chrome.storage.local.get(['pinnedNotes'], (result) => {
-      const pinnedNotes = result.pinnedNotes || {};
-      const currentUrl = window.location.href;
+      const pinnedNotes = result.pinnedNotes ? Object.assign(Object.create(null), result.pinnedNotes) : Object.create(null);
+      const currentUrl = this._normalizedUrl();
 
       Object.values(pinnedNotes).forEach(pinnedNote => {
         if (pinnedNote.url === currentUrl && !this.notes.has(pinnedNote.id)) {

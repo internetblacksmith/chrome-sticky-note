@@ -72,7 +72,7 @@ class TabCleanupManager {
   generateStorageKey(url) {
     try {
       const urlObj = new URL(url);
-      return `sticky_notes_${urlObj.origin}${urlObj.pathname}`;
+      return `sticky_notes_${urlObj.origin}${urlObj.pathname}${urlObj.search}`;
     } catch (error) {
       console.warn('[TabStickyNotes] Failed to generate storage key:', error);
       return null;
