@@ -14,10 +14,13 @@ A Chrome extension for adding persistent sticky notes to any webpage. Notes are 
 
 ## Installation
 
-1. Clone or download this repository
-2. Open `chrome://extensions/` in Chrome
-3. Enable **Developer mode** (top-right toggle)
-4. Click **Load unpacked** and select the extension folder
+1. Download the latest `tab-sticky-notes.zip` from the [Releases page](https://github.com/internetblacksmith/chrome-sticky-note/releases)
+2. Unzip the archive
+3. Open `chrome://extensions/` in Chrome
+4. Enable **Developer mode** (top-right toggle)
+5. Click **Load unpacked** and select the unzipped folder
+
+> **Note:** A Chrome Web Store listing is planned. Until then, the extension must be side-loaded using the steps above.
 
 ## Usage
 

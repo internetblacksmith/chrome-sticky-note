@@ -30,3 +30,7 @@ jobs:
           name: ${{ steps.version.outputs.tag }}
           files: tab-sticky-notes.zip
           generate_release_notes: true
+          append_body: true
+          body: |
+            ---
+            Download `tab-sticky-notes.zip` and follow the [installation guide](../../#installation).
